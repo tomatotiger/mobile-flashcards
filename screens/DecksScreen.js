@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux'
 import {
   Image,
   Platform,
@@ -12,7 +13,7 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 
-export default class DecksScreen extends React.Component {
+class DecksScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -130,3 +131,12 @@ const styles = StyleSheet.create({
     color: '#2e78b7',
   },
 });
+
+function mapStateToProps (decks) {
+  return {
+    decks
+  }
+}
+export default connect(
+  mapStateToProps,
+)(DecksScreen)
