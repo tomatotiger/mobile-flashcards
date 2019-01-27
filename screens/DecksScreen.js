@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { connect } from 'react-redux'
 import {
   Image,
@@ -7,89 +7,85 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-} from 'react-native';
-import { WebBrowser } from 'expo';
+  View
+} from 'react-native'
+import { WebBrowser } from 'expo'
+import { AppLoading } from 'expo'
 
-import { MonoText } from '../components/StyledText';
+import { MonoText } from '../components/StyledText'
+import { getDecks } from '../utils/api'
+import { receiveDecks } from '../actions/decks'
+import { DeckItem } from '../components/DeckItem'
 
 class DecksScreen extends React.Component {
-  static navigationOptions = {
-    header: null,
-  };
+  state = { ready: false }
 
-  render() {
+  componentDidMount () {
+    const { dispatch } = this.props
+
+    getDecks()
+      .then(decks => dispatch(receiveDecks(decks)))
+      .then(() => this.setState(() => ({ ready: true })))
+  }
+
+  render () {
+    const { decks } = this.props
+    const { ready } = this.state
+
+    if (ready === false ){
+      return <AppLoading />
+    }
+
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-
-          <View style={styles.getStartedContainer}>
-
-            <Text style={styles.getStartedText}>Get started by opening</Text>
-
-            <View style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-              <MonoText style={styles.codeHighlightText}>screens/DecksScreen.js</MonoText>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+        >
+        {Object.keys(decks).length > 0
+          ? <View style={styles.getStartedContainer}>
+              {Object.values(decks).map(deck => (
+              <DeckItem deck={deck} key={deck.title} navigation={this.props.navigation} />))}
             </View>
-
-            <Text style={styles.getStartedText}>
-              Change this text and your app will automatically reload.
-            </Text>
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
-          </View>
+          : <Text>No Decks</Text>
+        }
         </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>This is a tab bar. You can edit it in:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
       </View>
-    );
+    )
   }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
+    backgroundColor: '#fff'
   },
   contentContainer: {
-    paddingTop: 30,
+    paddingVertical: 30,
+    paddingHorizontal: 10
   },
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
+    flexDirection: 'row',
+    marginTop: 12
   },
   homeScreenFilename: {
-    marginVertical: 7,
+    marginVertical: 7
   },
   codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
+    color: 'rgba(96,100,109, 0.8)'
   },
   codeHighlightContainer: {
     backgroundColor: 'rgba(0,0,0,0.05)',
     borderRadius: 3,
-    paddingHorizontal: 4,
+    paddingHorizontal: 4
   },
   getStartedText: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
     lineHeight: 24,
-    textAlign: 'center',
+    textAlign: 'center'
   },
   tabBarInfoContainer: {
     position: 'absolute',
@@ -101,42 +97,40 @@ const styles = StyleSheet.create({
         shadowColor: 'black',
         shadowOffset: { height: -3 },
         shadowOpacity: 0.1,
-        shadowRadius: 3,
+        shadowRadius: 3
       },
       android: {
-        elevation: 20,
-      },
+        elevation: 20
+      }
     }),
     alignItems: 'center',
     backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
+    paddingVertical: 20
   },
   tabBarInfoText: {
     fontSize: 17,
     color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   navigationFilename: {
-    marginTop: 5,
+    marginTop: 5
   },
   helpContainer: {
     marginTop: 15,
-    alignItems: 'center',
+    alignItems: 'center'
   },
   helpLink: {
-    paddingVertical: 15,
+    paddingVertical: 15
   },
   helpLinkText: {
     fontSize: 14,
-    color: '#2e78b7',
-  },
-});
+    color: '#2e78b7'
+  }
+})
 
 function mapStateToProps (decks) {
   return {
     decks
   }
 }
-export default connect(
-  mapStateToProps,
-)(DecksScreen)
+export default connect(mapStateToProps)(DecksScreen)

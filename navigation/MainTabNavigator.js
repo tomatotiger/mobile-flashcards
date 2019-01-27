@@ -2,14 +2,15 @@ import React from 'react'
 import { Platform } from 'react-native'
 import {
   createStackNavigator,
-  createBottomTabNavigator
+  createBottomTabNavigator,
+  createSwitchNavigator
 } from 'react-navigation'
 
 import TabBarIcon from '../components/TabBarIcon'
 import DecksScreen from '../screens/DecksScreen'
 import AddDeckScreen from '../screens/AddDeckScreen'
 
-const Decks = createStackNavigator({
+const Decks = createSwitchNavigator({
   Decks: DecksScreen
 })
 
@@ -23,7 +24,7 @@ Decks.navigationOptions = {
   )
 }
 
-const AddDeck = createStackNavigator({
+const AddDeck = createSwitchNavigator({
   AddDeck: AddDeckScreen
 })
 

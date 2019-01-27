@@ -4,7 +4,8 @@ import { Provider } from 'react-redux'
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { AppLoading, Asset, Font, Icon } from 'expo'
 import AppNavigator from './navigation/AppNavigator'
-import reducer from './reducers'
+import decks from './reducers/decks'
+import scores from './reducers/scores'
 
 export default class App extends React.Component {
   state = {
@@ -21,10 +22,15 @@ export default class App extends React.Component {
         />
       )
     } else {
+      const store = createStore(
+        decks,
+        scores,
+        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+      )
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle='default' />}
-          <Provider store={createStore(reducer)}>
+          <Provider store={store}>
             <View style={{ flex: 1 }}>
               <AppNavigator />
             </View>
@@ -36,23 +42,14 @@ export default class App extends React.Component {
 
   _loadResourcesAsync = async () => {
     return Promise.all([
-      Asset.loadAsync([
-        require('./assets/images/robot-dev.png'),
-        require('./assets/images/robot-prod.png')
-      ]),
       Font.loadAsync({
-        // This is the font that we are using for our tab bar
         ...Icon.Ionicons.font,
-        // We include SpaceMono because we use it in DecksScreen.js. Feel free
-        // to remove this if you are not using it in your app
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf')
       })
     ])
   }
 
   _handleLoadingError = error => {
-    // In this case, you might want to report the error to your error
-    // reporting service, for example Sentry
     console.warn(error)
   }
 

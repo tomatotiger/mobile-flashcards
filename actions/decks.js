@@ -1,5 +1,3 @@
-import { deleteDeckCards } from './cards'
-
 export const RECEIVE_DECKS = 'RECEIVE_DECKS'
 export const ADD_DECK = 'ADD_DECK'
 export const DELETE_DECK = 'DELETE_DECK'
@@ -11,24 +9,15 @@ export function receiveDecks (decks) {
   }
 }
 
-export function addDeck (deck) {
+export function addDeck (title) {
   return {
     type: ADD_DECK,
-    deck
+    title
   }
 }
 
-export function deleteDeck (did) {
+export function deleteDeck (title) {
   return {
     type: DELETE_DECK
-  }
-}
-
-export function handleDeleteDeck (did) {
-  return dispatch => {
-    return deleteDeck().then(() => {
-      dispatch(deleteDeck(did))
-      dispatch(deleteDeckCards(did))
-    })
   }
 }
