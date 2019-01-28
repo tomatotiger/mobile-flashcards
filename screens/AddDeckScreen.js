@@ -5,6 +5,7 @@ import { NavigationActions } from 'react-navigation'
 
 import { white, gray, errorText } from '../constants/Colors'
 import { addDeck } from '../actions/decks'
+import { goTo } from '../utils/helpers'
 import { saveDeckTitle } from '../utils/api'
 import { SubmitBtn } from '../components/SubmitButton'
 
@@ -19,10 +20,6 @@ class AddDeckScreen extends React.Component {
     return existedTitles.length > 0 && existedTitles.includes(title)
   }
 
-  toHome = () => {
-    this.props.navigation.dispatch(NavigationActions.back({ key: 'AddDeck' }))
-  }
-
   onChange = title => {
     this.setState({ title, message: '' })
   }
@@ -34,8 +31,8 @@ class AddDeckScreen extends React.Component {
     } else {
       this.props.dispatch(addDeck(title))
       this.setState({ title: '' })
-      this.toHome()
       saveDeckTitle(title)
+      goTo(this.props.navigation, 'DeckDetail', { title })
     }
   }
 
