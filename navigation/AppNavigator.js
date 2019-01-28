@@ -5,7 +5,7 @@ import MainTabNavigator from './MainTabNavigator'
 import DeckDetailScreen from '../screens/DeckDetailScreen'
 import QuizScreen from '../screens/QuizScreen'
 import AddCardScreen from '../screens/AddCardScreen'
-import { white, purple } from '../constants/Colors'
+import { white, tintColor } from '../constants/Colors'
 
 export default createAppContainer(
   createStackNavigator({
@@ -15,7 +15,7 @@ export default createAppContainer(
       navigationOptions: {
         headerTintColor: white,
         headerStyle: {
-          backgroundColor: purple
+          backgroundColor: tintColor
         }
       }
     },
@@ -25,7 +25,7 @@ export default createAppContainer(
       navigationOptions: {
         headerTintColor: white,
         headerStyle: {
-          backgroundColor: purple
+          backgroundColor: tintColor
         }
       }
     },
@@ -35,7 +35,7 @@ export default createAppContainer(
       navigationOptions: {
         headerTintColor: white,
         headerStyle: {
-          backgroundColor: purple
+          backgroundColor: tintColor
         }
       }
     },

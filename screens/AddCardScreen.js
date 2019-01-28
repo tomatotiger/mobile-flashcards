@@ -1,13 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import {
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
-import { gray, errorText } from '../constants/Colors'
 import { addCardToDeck } from '../utils/api'
 import { addCard } from '../actions/cards'
 import { SubmitBtn } from '../components/SubmitButton'
 import { goBack } from '../utils/helpers'
+import { white, gray, errorText } from '../constants/Colors'
 
 class AddCardScreen extends React.Component {
   state = {
@@ -50,23 +56,25 @@ class AddCardScreen extends React.Component {
     const deckTitle = this.props.navigation.getParam('title')
     const { question, answer, message } = this.state
     return (
-      <View>
-        <Text>What is the title of your new deck?</Text>
+      <KeyboardAvoidingView style={styles.container}>
+        <Text style={styles.h1Text}>Input the question and answer:</Text>
         <TextInput
           onChangeText={text => this.onChange('question', text)}
           value={question}
+          style={styles.input}
           placeholder='Question'
           placeholderTextColor={gray}
         />
         <TextInput
           onChangeText={text => this.onChange('answer', text)}
+          style={styles.input}
           value={answer}
           placeholder='Answer'
           placeholderTextColor={gray}
         />
         <Text style={styles.messageText}> {message} </Text>
         <SubmitBtn onPress={this.onSubmit} disabled={this.disabled()} />
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -74,20 +82,32 @@ class AddCardScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
-  },
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center'
+    padding: 20,
+    backgroundColor: white,
+    alignItems: 'stretch'
   },
   messageText: {
     fontSize: 14,
-    color: errorText
+    color: errorText,
+    lineHeight: 24,
+    textAlign: 'left',
+    marginBottom: 10
+  },
+  h1Text: {
+    fontSize: 34,
+    color: '#2e78b7',
+    marginBottom: 10
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 3,
+    marginBottom: 10
   }
 })
 
-function mapStateToProps ({decks}, { navigation }) {
+function mapStateToProps ({ decks }, { navigation }) {
   const title = navigation.getParam('title')
   const deck = decks[title]
   return {

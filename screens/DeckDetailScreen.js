@@ -1,23 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  Button,
-  View
-} from 'react-native'
-import { AppLoading } from 'expo'
-import { NavigationActions } from 'react-navigation'
+import { StyleSheet, Text, Button, View } from 'react-native'
 
 import { goTo, goBack } from '../utils/helpers'
-import { DeckItem } from '../components/DeckItem'
 import { removeDeck } from '../utils/api'
 import { deleteDeck } from '../actions/decks'
 import { initScore } from '../actions/scores'
+import { white, gray } from '../constants/Colors'
 
 class DeckDetailScreen extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -44,33 +33,30 @@ class DeckDetailScreen extends React.Component {
     return (
       <View style={styles.container}>
         {deck && (
-          <ScrollView
-            style={styles.container}
-            contentContainerStyle={styles.contentContainer}
-          >
-            <View style={styles.getStartedContainer}>
-              <DeckItem
-                deck={deck}
-                key={deck.title}
-                navigation={this.props.navigation}
+          <View style={styles.container}>
+            <View style={styles.containerContent}>
+              <Text style={styles.h1Text}>{deck.title}</Text>
+              <Text style={{ fontSize: 16, color: gray }}>
+                {deck.questions.length > 0 ? deck.questions.length : 'no'} cards
+              </Text>
+            </View>
+            <View style={styles.buttons}>
+              <Button
+                title='Add card'
+                onPress={() =>
+                  goTo(navigation, 'AddCard', { title: deck.title })
+                }
+              />
+              <Button
+                title='Start quiz'
+                onPress={this.onQuiz}
+              />
+              <Button
+                title='Delete deck'
+                onPress={this.onDelete}
               />
             </View>
-            <Button
-              style={{ margin: 20 }}
-              title='Add card'
-              onPress={() => goTo(navigation, 'AddCard', { title: deck.title })}
-            />
-            <Button
-              style={{ margin: 20 }}
-              title='Start quiz'
-              onPress={this.onQuiz}
-            />
-            <Button
-              style={{ margin: 20 }}
-              title='Delete deck'
-              onPress={this.onDelete}
-            />
-          </ScrollView>
+          </View>
         )}
       </View>
     )
@@ -80,17 +66,32 @@ class DeckDetailScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    padding: 20,
+    backgroundColor: white,
+    alignItems: 'stretch',
   },
-  contentContainer: {
-    paddingVertical: 30,
-    paddingHorizontal: 10
-  },
-  getStartedContainer: {
+  containerContent:{
     alignItems: 'center',
-    marginHorizontal: 50,
-    flexDirection: 'row',
-    marginTop: 12
+  },
+
+  buttons: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    paddingVertical: 20
+  },
+  helpText: {
+    fontSize: 14,
+    color: gray,
+    textAlign: 'center',
+    marginBottom: 10
+  },
+  h1Text: {
+    fontSize: 34,
+    color: '#2e78b7',
+    textAlign: 'center',
+    marginBottom: 10
   }
 })
 

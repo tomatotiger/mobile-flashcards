@@ -1,9 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {
-  Image,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   Button,
@@ -11,11 +9,10 @@ import {
   View
 } from 'react-native'
 
-import { MonoText } from '../components/StyledText'
-import { DeckItem } from '../components/DeckItem'
 import { Score } from '../components/Score'
 import { recordScore } from '../actions/scores'
 import { goTo } from '../utils/helpers'
+import { white } from '../constants/Colors'
 
 class QuizScreen extends React.Component {
   state = {
@@ -31,9 +28,9 @@ class QuizScreen extends React.Component {
     const { last, title, quizIndex, dispatch, navigation } = this.props
     dispatch(recordScore({ quizIndex, answer }))
     const nextIndex = quizIndex + 1
-    this.setState({fliped: false})
-    last === true 
-      ? this.setState({showScore: true})
+    this.setState({ fliped: false })
+    last === true
+      ? this.setState({ showScore: true })
       : goTo(navigation, 'Quiz', { title, quizIndex: nextIndex })
   }
 
@@ -41,7 +38,7 @@ class QuizScreen extends React.Component {
     const { title, total, quizIndex, last, quiz, scores } = this.props
     if (quiz === null) {
       return (
-        <View>
+        <View style={styles.container}>
           <Text>
             Sorry, you cannot take a quiz because there are no cards in the
             deck.
@@ -55,55 +52,41 @@ class QuizScreen extends React.Component {
       const { fliped } = this.state
       return (
         <View style={styles.container}>
-          <Text style={styles.helpLinkText}>
+          <Text style={styles.currentText}>
             {quizIndex + 1} / {total}
           </Text>
           {fliped === false ? (
             // review the question
-            <View
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}
-            >
-              <View style={styles.getStartedContainer}>
-                <Text>{quiz.question}</Text>
-              </View>
+            <View>
+              <Text style={styles.h1Text}>{quiz.question}</Text>
 
-              <View style={styles.helpContainer}>
-                <TouchableOpacity
-                  onPress={() => this.onFlip(true)}
-                  style={styles.helpLink}
-                >
-                  <Text style={styles.helpLinkText}>Answer</Text>
-                </TouchableOpacity>
-              </View>
+              <TouchableOpacity
+                onPress={() => this.onFlip(true)}
+                style={styles.flip}
+              >
+                <Text style={styles.flipText}>Answer</Text>
+              </TouchableOpacity>
             </View>
           ) : (
             // review the answer
-            <View
-              style={styles.container}
-              contentContainerStyle={styles.contentContainer}
-            >
-              <View style={styles.getStartedContainer}>
-                <Text>{quiz.answer}</Text>
+            <View style={styles.container}>
+              <Text style={styles.h1Text}>{quiz.answer}</Text>
+              <TouchableOpacity
+                onPress={() => this.onFlip(false)}
+                style={styles.flip}
+              >
+                <Text style={styles.flipText}>Question</Text>
+              </TouchableOpacity>
+              <View style={styles.buttons}>
+                <Button
+                  title='Correct'
+                  onPress={() => this.onAnswer('correct')}
+                />
+                <Button
+                  title='Incorrect'
+                  onPress={() => this.onAnswer('inCorrect')}
+                />
               </View>
-              <View style={styles.helpContainer}>
-                <TouchableOpacity
-                  onPress={() => this.onFlip(false)}
-                  style={styles.helpLink}
-                >
-                  <Text style={styles.helpLinkText}>Question</Text>
-                </TouchableOpacity>
-              </View>
-              <Button
-                style={{ margin: 20 }}
-                title='Correct'
-                onPress={() => this.onAnswer('correct')}
-              />
-              <Button
-                style={{ margin: 20 }}
-                title='Incorrect'
-                onPress={() => this.onAnswer('inCorrect')}
-              />
             </View>
           )}
         </View>
@@ -115,73 +98,38 @@ class QuizScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff'
+    padding: 20,
+    backgroundColor: white,
+    alignItems: 'stretch'
   },
-  contentContainer: {
-    paddingVertical: 30,
-    paddingHorizontal: 10
-  },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-    flexDirection: 'row',
-    marginTop: 12
-  },
-  homeScreenFilename: {
-    marginVertical: 7
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)'
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center'
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3
-      },
-      android: {
-        elevation: 20
-      }
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center'
-  },
-  navigationFilename: {
-    marginTop: 5
+  h1Text: {
+    fontSize: 34,
+    textAlign: 'center',
+    marginBottom: 10
   },
   helpContainer: {
     marginTop: 15,
     alignItems: 'center'
   },
-  helpLink: {
-    paddingVertical: 15
-  },
-  helpLinkText: {
+  currentText: {
     fontSize: 14,
     color: '#2e78b7'
+  },
+  flip: {
+    paddingVertical: 15,
+    textAlign: 'center'
+  },
+  flipText: {
+    fontSize: 14,
+    color: '#2e78b7',
+    textAlign: 'center'
+  },
+  buttons: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    paddingVertical: 20
   }
 })
 

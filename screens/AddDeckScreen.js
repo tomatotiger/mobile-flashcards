@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, Text, TextInput, KeyboardAvoidingView } from 'react-native'
 import { NavigationActions } from 'react-navigation'
 
 import { white, gray, errorText } from '../constants/Colors'
@@ -42,10 +42,10 @@ class AddDeckScreen extends React.Component {
   render () {
     const { disabled, title, message } = this.state
     return (
-      <View style={styles.row}>
-        <Text>What is the title of your new deck?</Text>
+      <KeyboardAvoidingView style={styles.container}>
+        <Text style={styles.h1Text}>What is the title of your new deck?</Text>
         <TextInput
-          style={{ height: 40, borderColor: 'gray', borderWidth: 1 }}
+          style={styles.input}
           onChangeText={this.onChange}
           value={title}
           placeholder='Desk title'
@@ -53,7 +53,7 @@ class AddDeckScreen extends React.Component {
         />
         <Text style={styles.messageText}> {message} </Text>
         <SubmitBtn onPress={this.onSubmit} disabled={title.trim() === ''} />
-      </View>
+      </KeyboardAvoidingView>
     )
   }
 }
@@ -62,17 +62,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: white
-  },
-  row: {
-    flexDirection: 'row',
-    flex: 1,
-    alignItems: 'center'
+    backgroundColor: white,
+    alignItems: 'stretch',
   },
   messageText: {
     fontSize: 14,
-    color: errorText
+    color: errorText,
+    lineHeight: 24,
+    textAlign: 'left',
+    marginBottom: 10
   },
+  h1Text: {
+    fontSize: 34,
+    color: '#2e78b7',
+    marginBottom: 10
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 3,
+    marginBottom: 10
+  }
 })
 
 function mapStateToProps ({decks}) {

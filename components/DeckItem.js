@@ -1,5 +1,6 @@
 import React from 'react'
-import { Text, TouchableOpacity } from 'react-native'
+import { Text, TouchableOpacity, StyleSheet } from 'react-native'
+
 import { gray } from '../constants/Colors'
 import { goTo } from '../utils/helpers'
 
@@ -8,6 +9,7 @@ export function DeckItem ({ deck, navigation }) {
   return (
     <TouchableOpacity
       onPress={() => goTo(navigation, 'DeckDetail', { title: deck.title })}
+      style={styles.deckItem}
       key={deck.title}
     >
       <Text style={{ fontSize: 20 }}>{deck.title}</Text>
@@ -17,3 +19,13 @@ export function DeckItem ({ deck, navigation }) {
     </TouchableOpacity>
   )
 }
+
+const styles = StyleSheet.create({
+  deckItem: {
+    marginVertical: 15,
+    paddingBottom: 3,
+    borderRadius: 4,
+    borderBottomWidth: 0.4,
+    borderColor: '#d6d7da'
+  }
+})
