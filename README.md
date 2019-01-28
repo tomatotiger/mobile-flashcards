@@ -13,7 +13,7 @@ This project is bootstrapped with [Create React Native App](https://github.com/r
 
 Core ingredients: 
 - [ES6](http://es6-features.org/#Constants): Written in ES6
-- [React Navigation](rhttps://reactnavigation.org/en/): Configure routers
+- [React Navigation](https://reactnavigation.org/en/): Configure routers
 - [redux-thunk](https://github.com/reduxjs/redux-thunk): A middleware to handle async actions
 - [Expo](https://expo.io/): Icons, Fonts and AppLoading
 
