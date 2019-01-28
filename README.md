@@ -2,7 +2,7 @@
 
 In this game, you can create different categories of flashcards called "decks", add flashcards to those decks, then take quizzes on those decks. Once you completed the quiz, you will know the score.
 
-## You can:## You can:
+## You can:
 * add and delete decks.
 * show the details about decks, ten you can add cards.
 * once any deck has any card, you can take a quizz.
