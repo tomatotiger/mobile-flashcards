@@ -10,15 +10,17 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
-import { WebBrowser } from 'expo'
-import { AppLoading } from 'expo'
 
 import { MonoText } from '../components/StyledText'
 import { DeckItem } from '../components/DeckItem'
+import { Score } from '../components/Score'
+import { recordScore } from '../actions/scores'
+import { goTo } from '../utils/helpers'
 
 class QuizScreen extends React.Component {
   state = {
-    fliped: false
+    fliped: false,
+    showScore: false
   }
 
   onFlip = fliped => {
@@ -26,11 +28,17 @@ class QuizScreen extends React.Component {
   }
 
   onAnswer = answer => {
-    const last = this.props.last
+    const { last, title, quizIndex, dispatch, navigation } = this.props
+    dispatch(recordScore({ quizIndex, answer }))
+    const nextIndex = quizIndex + 1
+    this.setState({fliped: false})
+    last === true 
+      ? this.setState({showScore: true})
+      : goTo(navigation, 'Quiz', { title, quizIndex: nextIndex })
   }
 
   render () {
-    const { title, total, quizIndex, last, quiz } = this.props
+    const { title, total, quizIndex, last, quiz, scores } = this.props
     if (quiz === null) {
       return (
         <View>
@@ -41,63 +49,66 @@ class QuizScreen extends React.Component {
         </View>
       )
     }
+    if (this.state.showScore === true) {
+      return <Score scores={scores} />
+    } else {
+      const { fliped } = this.state
+      return (
+        <View style={styles.container}>
+          <Text style={styles.helpLinkText}>
+            {quizIndex + 1} / {total}
+          </Text>
+          {fliped === false ? (
+            // review the question
+            <View
+              style={styles.container}
+              contentContainerStyle={styles.contentContainer}
+            >
+              <View style={styles.getStartedContainer}>
+                <Text>{quiz.question}</Text>
+              </View>
 
-    const { fliped } = this.state
-    return (
-      <View style={styles.container}>
-        <Text style={styles.helpLinkText}>
-          {quizIndex + 1} / {total}
-        </Text>
-        {fliped === false ? (
-          // review the question
-          <View
-            style={styles.container}
-            contentContainerStyle={styles.contentContainer}
-          >
-            <View style={styles.getStartedContainer}>
-              <Text>{quiz.question}</Text>
+              <View style={styles.helpContainer}>
+                <TouchableOpacity
+                  onPress={() => this.onFlip(true)}
+                  style={styles.helpLink}
+                >
+                  <Text style={styles.helpLinkText}>Answer</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-
-            <View style={styles.helpContainer}>
-              <TouchableOpacity
-                onPress={() => this.onFlip(true)}
-                style={styles.helpLink}
-              >
-                <Text style={styles.helpLinkText}>Answer</Text>
-              </TouchableOpacity>
+          ) : (
+            // review the answer
+            <View
+              style={styles.container}
+              contentContainerStyle={styles.contentContainer}
+            >
+              <View style={styles.getStartedContainer}>
+                <Text>{quiz.answer}</Text>
+              </View>
+              <View style={styles.helpContainer}>
+                <TouchableOpacity
+                  onPress={() => this.onFlip(false)}
+                  style={styles.helpLink}
+                >
+                  <Text style={styles.helpLinkText}>Question</Text>
+                </TouchableOpacity>
+              </View>
+              <Button
+                style={{ margin: 20 }}
+                title='Correct'
+                onPress={() => this.onAnswer('correct')}
+              />
+              <Button
+                style={{ margin: 20 }}
+                title='Incorrect'
+                onPress={() => this.onAnswer('inCorrect')}
+              />
             </View>
-          </View>
-        ) : (
-          // review the answer
-          <View
-            style={styles.container}
-            contentContainerStyle={styles.contentContainer}
-          >
-            <View style={styles.getStartedContainer}>
-              <Text>{quiz.answer}</Text>
-            </View>
-            <View style={styles.helpContainer}>
-              <TouchableOpacity
-                onPress={() => this.onFlip(false)}
-                style={styles.helpLink}
-              >
-                <Text style={styles.helpLinkText}>Question</Text>
-              </TouchableOpacity>
-            </View>
-            <Button
-              style={{ margin: 20 }}
-              title='Correct'
-              onPress={() => this.onAnswer('correct')}
-            />
-            <Button
-              style={{ margin: 20 }}
-              title='Incorrect'
-              onPress={() => this.onAnswer('inCorrect')}
-            />
-          </View>
-        )}
-      </View>
-    )
+          )}
+        </View>
+      )
+    }
   }
 }
 
@@ -174,15 +185,17 @@ const styles = StyleSheet.create({
   }
 })
 
-function mapStateToProps (state, { navigation, quizIndex = 0 }) {
+function mapStateToProps ({ decks, scores }, { navigation }) {
   const title = navigation.getParam('title')
-  const deck = state[title]
+  const quizIndex = navigation.getParam('quizIndex') || 0
+  const deck = decks[title]
   const total = deck.questions.length
   return {
     title,
     total,
+    scores,
     quizIndex,
-    last: quizIndex === total,
+    last: quizIndex + 1 === total,
     quiz: total > 0 ? deck.questions[quizIndex] : null
   }
 }

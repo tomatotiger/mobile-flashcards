@@ -87,14 +87,11 @@ const styles = StyleSheet.create({
   }
 })
 
-function mapStateToProps (state, { navigation }) {
+function mapStateToProps ({decks}, { navigation }) {
   const title = navigation.getParam('title')
-  const deck = state[title]
+  const deck = decks[title]
   return {
     existedQuestions: deck.questions.map(c => c.question)
-    // existedCards: deck.questions.length>0
-    //   ? Object.keys(decks)
-    //   : []
   }
 }
 

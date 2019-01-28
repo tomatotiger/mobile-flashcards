@@ -1,11 +1,12 @@
 import React from 'react'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
+import thunk from 'redux-thunk';
 import { Platform, StatusBar, StyleSheet, View } from 'react-native'
 import { AppLoading, Asset, Font, Icon } from 'expo'
+
 import AppNavigator from './navigation/AppNavigator'
-import decks from './reducers/decks'
-import scores from './reducers/scores'
+import reducer from './reducers'
 
 export default class App extends React.Component {
   state = {
@@ -22,11 +23,19 @@ export default class App extends React.Component {
         />
       )
     } else {
-      const store = createStore(
-        decks,
-        scores,
-        window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+
+      const composeEnhancers =
+        typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+          ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
+            // Specify extension’s options like name, actionsBlacklist, actionsCreators, serialize...
+          })
+          : compose
+      
+      const enhancer = composeEnhancers(
+        applyMiddleware(thunk)
       )
+      const store = createStore(reducer, enhancer)
+      
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle='default' />}

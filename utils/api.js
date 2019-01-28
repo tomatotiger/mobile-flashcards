@@ -18,7 +18,6 @@ export function saveDeckTitle (title) {
 export function addCardToDeck ({ deckTitle, question, answer }) {
   return AsyncStorage.getItem(DACK_STORAGE_KEY).then(results => {
     const data = JSON.parse(results)
-    console.log(data)
     data[deckTitle].questions.push({ question, answer })
     AsyncStorage.mergeItem(DACK_STORAGE_KEY, JSON.stringify(data))
   })

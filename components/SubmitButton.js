@@ -3,13 +3,13 @@ import { StyleSheet, Text, Platform, TouchableOpacity } from 'react-native'
 import { white, purple } from '../constants/Colors'
 
 export function SubmitBtn ({ onPress, disabled }) {
+  const buttonStyle =
+    Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn
   return (
     <TouchableOpacity
-      style={
-        Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn
-      }
       disabled={disabled}
       onPress={onPress}
+      style={{ ...buttonStyle, backgroundColor: '#dfdfdf' }}
     >
       <Text style={styles.submitBtnText}>SUBMIT</Text>
     </TouchableOpacity>

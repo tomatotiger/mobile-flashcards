@@ -7,3 +7,7 @@ export const formatResults = results => {
 export const goBack = navigation => {
   navigation.dispatch(NavigationActions.back())
 }
+
+export const goTo = (navigation, to, paras) => {
+  navigation.navigate(to, paras)
+}

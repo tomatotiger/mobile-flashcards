@@ -15,10 +15,10 @@ export function initScore (total) {
   }
 }
 
-export function recordScore ({ index, isCorrect }) {
+export function recordScore ({ quizIndex, answer }) {
   return {
     type: RECORD_SCORE,
-    index,
-    isCorrect
+    quizIndex,
+    answer
   }
 }

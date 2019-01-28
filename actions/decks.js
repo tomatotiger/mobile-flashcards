@@ -18,6 +18,7 @@ export function addDeck (title) {
 
 export function deleteDeck (title) {
   return {
-    type: DELETE_DECK
+    type: DELETE_DECK,
+    title
   }
 }
