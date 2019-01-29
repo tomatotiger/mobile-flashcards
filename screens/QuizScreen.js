@@ -13,6 +13,7 @@ import { Score } from '../components/Score'
 import { recordScore } from '../actions/scores'
 import { goTo } from '../utils/helpers'
 import { white } from '../constants/Colors'
+import { initScore } from '../actions/scores'
 
 class QuizScreen extends React.Component {
   state = {
@@ -34,8 +35,24 @@ class QuizScreen extends React.Component {
       : goTo(navigation, 'Quiz', { title, quizIndex: nextIndex })
   }
 
+  restartQuiz = () => {
+    this.setState({ showScore: false })
+    const { dispatch, navigation, title, total } = this.props
+    dispatch(initScore(total))
+    goTo(navigation, 'Quiz', { title, quizIndex: 0 })
+  }
+
   render () {
-    const { title, total, quizIndex, last, quiz, scores } = this.props
+    const {
+      deck,
+      title,
+      total,
+      quizIndex,
+      last,
+      quiz,
+      scores,
+      navigation
+    } = this.props
     if (quiz === null) {
       return (
         <View style={styles.container}>
@@ -47,7 +64,13 @@ class QuizScreen extends React.Component {
       )
     }
     if (this.state.showScore === true) {
-      return <Score scores={scores} />
+      return (
+        <Score
+          scores={scores}
+          restartQuiz={this.restartQuiz}
+          navigation={navigation}
+        />
+      )
     } else {
       const { fliped } = this.state
       return (
@@ -140,6 +163,7 @@ function mapStateToProps ({ decks, scores }, { navigation }) {
   const total = deck.questions.length
   return {
     title,
+    deck,
     total,
     scores,
     quizIndex,

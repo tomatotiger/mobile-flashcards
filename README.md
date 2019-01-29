@@ -2,6 +2,8 @@
 
 In this game, you can create different categories of flashcards called "decks", add flashcards to those decks, then take quizzes on those decks. Once you completed the quiz, you will know the score.
 
+### The game can run on IOS and Android. It been tested on Iphone XR, One+ and IOS emulator.
+
 ## You can:
 * add and delete decks.
 * show the details about decks, ten you can add cards.
