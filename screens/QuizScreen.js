@@ -14,6 +14,13 @@ import { recordScore } from '../actions/scores'
 import { goTo } from '../utils/helpers'
 import { white } from '../constants/Colors'
 import { initScore } from '../actions/scores'
+import {
+  clearLocalNotification,
+  setLocalNotification,
+  timeToString
+} from '../utils/helpers'
+import { completeTask } from '../actions/dailyTask'
+import { addLog } from '../utils/api'
 
 class QuizScreen extends React.Component {
   state = {
@@ -25,13 +32,20 @@ class QuizScreen extends React.Component {
     this.setState({ fliped })
   }
 
+  completeQuizz = () => {
+    const log = { date: [timeToString()], completed: true }
+    addLog(log).then(() => this.props.dispatch(completeTask(log)))
+    clearLocalNotification().then(setLocalNotification)
+    this.setState({ showScore: true })
+  }
+
   onAnswer = answer => {
     const { last, title, quizIndex, dispatch, navigation } = this.props
     dispatch(recordScore({ quizIndex, answer }))
     const nextIndex = quizIndex + 1
     this.setState({ fliped: false })
     last === true
-      ? this.setState({ showScore: true })
+      ? this.completeQuizz()
       : goTo(navigation, 'Quiz', { title, quizIndex: nextIndex })
   }
 

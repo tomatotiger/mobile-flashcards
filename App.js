@@ -7,10 +7,15 @@ import { AppLoading, Asset, Font, Icon } from 'expo'
 
 import AppNavigator from './navigation/AppNavigator'
 import reducer from './reducers'
+import { setLocalNotification } from './utils/helpers'
 
 export default class App extends React.Component {
   state = {
     isLoadingComplete: false
+  }
+
+  componentDidMount() {
+    setLocalNotification()
   }
 
   render () {
